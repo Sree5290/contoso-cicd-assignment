@@ -4,6 +4,11 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  azureSubscription: 'Azure for Students'
+  webAppName: '222-sreeraj-cicd'
+'
+
 steps:
 
 - task: UsePythonVersion@0
@@ -29,8 +34,11 @@ steps:
     replaceExistingArchive: true
   displayName: 'Package application'
 
-- task: PublishBuildArtifacts@1
+- task: AzureWebApp@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/application.zip'
-    ArtifactName: 'drop'
-  displayName: 'Publish build artifact'
+    azureSubscription: '$(azureSubscription)'
+    appType: 'webAppLinux'
+    appName: '$(webAppName)'
+    package: '$(Build.ArtifactStagingDirectory)/application.zip'
+    runtimeStack: 'PYTHON|3.11'
+  displayName: 'Deploy to Azure App Service'
